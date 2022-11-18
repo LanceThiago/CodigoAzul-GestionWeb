@@ -30,7 +30,7 @@
             <?php endif; ?>
             <div class="d-flex justify-content-center">
                 <div style="width:min-content;  background-color:#7FB5FF;  border-radius: 50%">
-                    <img src="../images/logoicono.png" class="m-5 d-flex justify-content-center" height="200px">
+                    <img src="../logoicono.png" class="m-5 d-flex justify-content-center" height="200px">
                 </div>
             </div>
             <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
