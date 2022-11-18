@@ -57,24 +57,29 @@
 <?php
 include ('../../DB/DBConnection.php');
     $dbHandler = DbHandler();
-    $LEER=$dbHandler->prepare("SELECT alarmas.Origen, alarmas.Creado FROM alarmas;");
+    $LEER=$dbHandler->prepare("SELECT enfermeros.ID_Enfermero, alarmas.Origen, pacientes.ID_Paciente FROM enfermeros ,alarmas, pacientes;");
     $LEER->execute();
-    $ca=0;
-    $b=0;
-    $c=0;
+    $ce = -1;
+	$cp = -1;
+    $b = 0;
+    $c = 0;
     foreach ($LEER as $dato) {
-        $ca++;
-        if ($dato['Origen']=='Baño' || $dato['Origen']=='baño') {
+        if (isset($dato['ID_Enfermero'])) {
+						$ce++;
+					}
+        if (isset($dato['ID_Paciente'])) {
+            $cp++;
+        }
+        if ($dato['Origen'] == 'Baño' || $dato['Origen'] == 'baño') {
             $b++;
         }
-        elseif ($dato['Origen']=='Cama' || $dato['Origen']=='cama') {
+        elseif ($dato['Origen'] == 'Cama' || $dato['Origen'] == 'cama') {
             $c++;
         }
     }
     $b = array($b,$c);
-
-    $a = array($ca);
-    $c = array(7,10);
+    $c = array($ce, $cp);
+    $a = array(7,10);
 ?>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
