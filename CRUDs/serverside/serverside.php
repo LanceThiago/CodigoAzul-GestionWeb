@@ -61,11 +61,7 @@
 			
 			$columnsNew = array();
 			foreach ($columns as $key => $column) {
-				if (str_contains($column, '.')) {
-					$columnsNew[] = $column . ' AS "' . $as[$key] . '"';
-				} else {
-					$columnsNew[] = $column;
-				}
+				$columnsNew[] = $column . ' AS "' . $as[$key] . '"';
 			}
 
 			// SQL queries get data to display

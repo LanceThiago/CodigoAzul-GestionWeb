@@ -40,6 +40,25 @@
             return $response;
         }
 
+        public function count($table, $indexColumn, $where, $status) {
+            $query = $this->_db->prepare("SELECT COUNT($indexColumn) FROM $table " . ($status != "" ? "WHERE Estado = $status" : "") . ($where != '' ? " AND $where" : "") . ";");
+            $query->execute(array());
+            $response = $query->fetchAll();
+            return $response;
+        }
+
+        public function promedioRespuesta($table, $columnInicio, $columnFinal, $as) {
+            $query = $this->_db->prepare("SELECT SEC_TO_TIME(TIMESTAMPDIFF(SECOND, $columnInicio, $columnFinal)) AS $as FROM $table;");
+            $query->execute(array());
+            $response = $query->fetchAll();
+            $unix = array();
+            for ($c = 0; $c < count($response); $c++) {
+                $unix[] = strtotime('1970-01-02 ' . $response[$c]['Diferencia']);
+            }
+            $total = array_sum($unix);
+            return date('H:i:s', $total / count($response));
+        }
+
         public function verificarExistenciaRegistro($table, $indexColumn, $column, $value, $where, $as) {
             $query = $this->_db->prepare("SELECT COUNT($indexColumn) AS 'count', $indexColumn FROM $table WHERE $column = '$value' " . ($where != '' ? " AND $where" : "") . ";");
             $query->execute(array());
