@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    console.log('sas');
     var ID, opcion, estado;
     estado = 1;
 

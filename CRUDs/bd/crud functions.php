@@ -23,13 +23,18 @@
         }
 
         public function estadoRegistro($table, $indexColumn, $index, $status) {
-            $query = $this->_db->prepare("UPDATE $table SET Estado = '$status' WHERE $indexColumn = $index;");
+            $query = $this->_db->prepare("UPDATE $table SET Estado = '$status', Editado = '" . date('Y-m-d H:i:s') . "' WHERE $indexColumn = $index;");
             $query->execute(array());
             $response = $query->fetchAll();
         }
 
         public function select($table, $indexColumn, $columns, $where) {
-            $query = $this->_db->prepare("SELECT `".str_replace(" , ", " ", implode("`, `", $columns))."` FROM $table WHERE Estado = 1" . ($where != '' ? " AND $where" : "") . ";");
+            if ($where == 'Estado = 0') {
+                $status = '1';
+            } else {
+                $status = 'Estado = 1';
+            }
+            $query = $this->_db->prepare("SELECT `".str_replace(" , ", " ", implode("`, `", $columns))."` FROM $table WHERE $status" . ($where != '' ? " AND $where" : "") . ";");
             $query->execute(array());
             $response = $query->fetchAll();
             return $response;

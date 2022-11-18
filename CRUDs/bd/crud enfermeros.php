@@ -13,13 +13,13 @@
 
         switch($opcion){
             case 1: //Insertar
-                $columns = array('Nombre', 'Apellido', 'DNI');
-                $values = array($nombre, $apellido, $dni);
+                $columns = array('Nombre', 'Apellido', 'DNI', 'Editado');
+                $values = array($nombre, $apellido, $dni, date('Y-m-d H:i:s'));
                 $data = $DBQuerys->crearRegistro('Enfermeros', $columns, $values);
                 break;
             case 2: //Editar
-                $columns = array('Nombre', 'Apellido', 'DNI');
-                $values = array($nombre, $apellido, $dni);
+                $columns = array('Nombre', 'Apellido', 'DNI', 'Editado');
+                $values = array($nombre, $apellido, $dni, date('Y-m-d H:i:s'));
                 $data = $DBQuerys->editarRegistro('Enfermeros', $columns, $values, 'ID_Enfermero', $ID);
                 break;
             case 3: //Borrar

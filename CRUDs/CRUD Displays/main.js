@@ -2,8 +2,8 @@ $(document).ready(function() {
     var ID, opcion, estado, table, indexColumn, where, columns = [];
     estado = 1;
 
-    $('#alarmas').addClass('active');
-    $('title').text('Control Panel - CRUD Alarmas');
+    $('#displays').addClass('active');
+    $('title').text('Control Panel - CRUD Displays');
 
     var $selectUbicacion = $('#ID_Ubicacion');
     $selectUbicacion.select2({
@@ -38,92 +38,90 @@ $(document).ready(function() {
     
     $('#btnEstado').on('click', function(){
         if (estado == 1) {
-            $('#tablaAlarmasInactivo_wrapper').show();
-            $('#tablaAlarmasActivo_wrapper').hide();
+            $('#tablaDisplaysInactivo_wrapper').show();
+            $('#tablaDisplaysActivo_wrapper').hide();
             estado = 0;
         } else {
-            $('#tablaAlarmasInactivo_wrapper').hide();
-            $('#tablaAlarmasActivo_wrapper').show();
+            $('#tablaDisplaysInactivo_wrapper').hide();
+            $('#tablaDisplaysActivo_wrapper').show();
             estado = 1;
         }
     });
 
-    tablaAlarmaActivo = $('#tablaAlarmasActivo').DataTable({
+    tablaDisplayActivo = $('#tablaDisplaysActivo').DataTable({
         "bProcessing": true,
         "bDeferRender": true,
         "bServerSide": true,
-        "sAjaxSource": "../serverside/serversideAlarma.php?estado=1",
+        "sAjaxSource": "../serverside/serversideDisplay.php?estado=1",
         "columnDefs": [{
             "targets": -1,
             "defaultContent": "<div class='wrapper text-center'><div class='btn-group'><button class='btn btn-info btn-sm btnEditar' data-toggle='tooltip' title='Editar'><i class='bx bx-edit'></i>edit</button><button class='btn btn-danger btn-sm btnBorrar' data-toggle='tooltip' title='Eliminar'><i class='bx bx-eraser'></i>del</button></div></div>"
         }],
     });
 
-    tablaAlarmaInactivo = $('#tablaAlarmasInactivo').DataTable({
+    tablaDisplayInactivo = $('#tablaDisplaysInactivo').DataTable({
         "bProcessing": true,
         "bDeferRender": true,
         "bServerSide": true,
-        "sAjaxSource": "../serverside/serversideAlarma.php?estado=0",
+        "sAjaxSource": "../serverside/serversideDisplay.php?estado=0",
         "columnDefs": [{
             "targets": -1,
             "defaultContent": "<div class='wrapper text-center'><button class='btn btn-info btn-sm btnRestaurar' data-toggle='tooltip' title='restaurar'><i class='bx bx-reset'></i>Restaurar</button></div>"
         }],
     });
 
-    $('#tablaAlarmasInactivo_wrapper').hide();
+    $('#tablaDisplaysInactivo_wrapper').hide();
 
     var fila;
 
-    $('#formAlarma').submit(function(e){
+    $('#formDisplay').submit(function(e){
         e.preventDefault();
         descripcion = $.trim($('#descripcion').val());
         ID_Ubicacion = $.trim($('#ID_Ubicacion').val());
-        origen = $.trim($('#origen').val());
         ip = $.trim($('#ip').val());
         usuario = $.trim($('#usuario').val());
         password = $.trim($('#password').val());
         $.ajax({
-            url: "../bd/crud Alarmas.php",
+            url: "../bd/crud Displays.php",
             type: "POST",
             datatype: "json",
-            data:  {ID:ID, descripcion:descripcion, ID_Ubicacion:ID_Ubicacion, origen:origen, ip:ip, usuario:usuario, password:password, opcion:opcion},
+            data:  {ID:ID, descripcion:descripcion, ID_Ubicacion:ID_Ubicacion, ip:ip, usuario:usuario, password:password, opcion:opcion},
             success: function(data) {
                 if (data == 'false') {
                     alert('No tiene suficientes permisos para realizar esta accion.');
                 }
                 console.log(data);
-                tablaAlarmaActivo.ajax.reload(null, false);
-                tablaAlarmaInactivo.ajax.reload(null, false);
+                tablaDisplayActivo.ajax.reload(null, false);
+                tablaDisplayInactivo.ajax.reload(null, false);
             }
         });
         $('#modalCRUD').modal('hide');
     });
     
     $("#btnNuevo").click(function(){
-        $('#formAlarma')[0].reset();
+        $('#formDisplay')[0].reset();
         $selectUbicacion.val(null).trigger("change");
         opcion = 1;
         ID = null;
-        $("#formAlarma").trigger("reset");
+        $("#formDisplay").trigger("reset");
         $(".modal-header").css( "background-color", "var(--first-color)");
         $(".modal-header").css( "color", "white" );
-        $(".modal-title").text("Alta de Alarma");
+        $(".modal-title").text("Alta de Display");
         $('#modalCRUD').modal('show');
         $('.modal-backdrop').css('width', '100%');
     });
 
     $(document).on("click", ".btnEditar", function(){
-        $('#formAlarma')[0].reset();
+        $('#formDisplay')[0].reset();
         opcion = 2;
         fila = $(this).closest("tr");
         ID = parseInt(fila.find('td:eq(0)').text());
         descripcion = fila.find('td:eq(1)').text();
-        origen = fila.find('td:eq(3)').text();
-        IP = fila.find('td:eq(4)').text();
-        usuario = fila.find('td:eq(5)').text();
-        password = fila.find('td:eq(6)').text();
-        table = 'alarmas';
-        indexColumn = 'ID_Alarma';
+        IP = fila.find('td:eq(3)').text();
+        usuario = fila.find('td:eq(4)').text();
+        password = fila.find('td:eq(5)').text();
+        table = 'Displays';
+        indexColumn = 'ID_Display';
         columns = ['ID_Ubicacion'];
         where = indexColumn + ' = ' + ID;
         $.ajax({
@@ -138,13 +136,12 @@ $(document).ready(function() {
         });
         $("#descripcion").val(descripcion);
         $("#ID_Ubicacion").val(ID_Ubicacion);
-        $("#origen").val(origen);
         $("#ip").val(IP);
         $("#usuario").val(usuario);
         $("#password").val(password);
         $(".modal-header").css("background-color", "var(--first-color)");
         $(".modal-header").css("color", "white" );
-        $(".modal-title").text("Editar Alarma");
+        $(".modal-title").text("Editar Display");
         $('#modalCRUD').modal('show');
         $('.modal-backdrop').css('width', '100%');
     });
@@ -156,7 +153,7 @@ $(document).ready(function() {
         var respuesta = confirm("¿Está seguro de que desesa borrar el registro " + ID + "?");
         if (respuesta) {
             $.ajax({
-                url: "../bd/crud Alarmas.php",
+                url: "../bd/crud Displays.php",
                 type: "POST",
                 datatype: "json",
                 data:  {opcion:opcion, ID:ID},
@@ -164,8 +161,8 @@ $(document).ready(function() {
                     if (data == 'false') {
                         alert('No tiene suficientes permisos para realizar esta accion.');
                     }
-                    tablaAlarmaActivo.ajax.reload(null, false);
-                    tablaAlarmaInactivo.ajax.reload(null, false);
+                    tablaDisplayActivo.ajax.reload(null, false);
+                    tablaDisplayInactivo.ajax.reload(null, false);
                 }
             });
         }
@@ -178,7 +175,7 @@ $(document).ready(function() {
         var respuesta = confirm("¿Está seguro de que desea restaurar el registro " + ID + "?");
         if (respuesta) {
             $.ajax({
-                url: "../bd/crud Alarmas.php",
+                url: "../bd/crud Displays.php",
                 type: "POST",
                 datatype: "json",
                 data:  {opcion:opcion, ID:ID},
@@ -186,8 +183,8 @@ $(document).ready(function() {
                     if (data == 'false') {
                         alert('No tiene suficientes permisos para realizar esta accion.');
                     }
-                    tablaAlarmaActivo.ajax.reload(null, false);
-                    tablaAlarmaInactivo.ajax.reload(null, false);
+                    tablaDisplayActivo.ajax.reload(null, false);
+                    tablaDisplayInactivo.ajax.reload(null, false);
                 }
             });
         }

@@ -1,6 +1,7 @@
 $(document).ready(function() {
-    var ID, opcion;
+    var ID, opcion, estado = 1;
     estado = 1;
+    $('#activo').text('(activos)');
 
     $('#pacientes').addClass('active');
     $('title').text('Control Panel - CRUD Pacientes');
@@ -59,7 +60,6 @@ $(document).ready(function() {
         }
     });
 
-
     var $selectEnfermero = $('#ID_Enfermero');
     $selectEnfermero.select2({
         dropdownParent: $('#modalCRUD'),
@@ -97,10 +97,64 @@ $(document).ready(function() {
     $select2.addClass('d-flex align-items-center');
     $select2.css('border-color', '#ced4da');
 
-    var fila;
-
     $selectPaciente.on('change', function() {
-        $("#formPacienteEdit").show();
+        if (estado == 1) {
+            $('#formPacienteEdit')[0].reset();
+            $("#formPacienteEdit").show();
+            ID = $(this).val();
+            table = 'pacientes';
+            indexColumn = 'ID_Paciente';
+            columns = ['Nombre', 'Apellido', 'DNI', 'Telefono', 'Direccion', 'Localidad', 'Provincia', 'Obra_Social', 'NroObraSocial', 'Medico_Cabecera', 'Padecimiento', 'GrupoSanguineo', 'ID_Enfermero', 'ID_Ubicacion', 'Creado', 'Editado'];
+            where = 'ID_Paciente = "' + $(this).val() + '"';
+            $.ajax({
+                url: "../bd/obtenerDatosSelect.php",
+                type: "POST",
+                datatype: "json",
+                data: {table:table, indexColumn:indexColumn, columns:columns, where:where},
+                success: function(data) {
+                    data = JSON.parse(data);
+                    $("#nombreEdit").val(data[0]['Nombre']);
+                    $("#apellidoEdit").val(data[0]['Apellido']);
+                    $("#dniEdit").val(data[0]['DNI']);
+                    $("#telefonoEdit").val(data[0]['Telefono']);
+                    $("#dirEdit").val(data[0]['Direccion']);
+                    $("#localidadEdit").val(data[0]['Localidad']);
+                    $("#provinciaEdit").val(data[0]['Provincia']);
+                    $("#obraEdit").val(data[0]['Obra_Social']);
+                    $("#obraNroEdit").val(data[0]['NroObraSocial']);
+                    $("#medicoEditEdit").val(data[0]['Medico_Cabecera']);
+                    $("#padecimientoEdit").val(data[0]['Padecimiento']);
+                    $selectEnfermeroEdit.val(data[0]['ID_Enfermero']).trigger("change");
+                    $selectUbicacionEdit.val(data[0]['ID_Ubicacion']).trigger("change");
+                    $('.btnBorrar').attr('data-id', ID);
+                    $('#btnGuardar').attr('data-id', ID);
+                    $('#creado').text('Creado: ' + data[0]['Creado']);
+                    $('#editado').text('Editado: ' + data[0]['Editado']);
+                }
+            });
+            where = 'Estado = ' + estado;
+        } else {
+            $(".btnRestaurar").show();
+            $('.btnRestaurar').attr('data-id', ID);
+        }
+    });
+
+    $('#btnEstado').on('click', function(e) {
+        e.preventDefault();
+        if (estado == 1) {
+            where = 'Estado = 0';
+            $("#formPacienteEdit").hide();
+            estado = 0;
+            $('#activo').text('(inactivos)');
+        } else {
+            where = '';
+            estado = 1;
+            $(".btnRestaurar").hide();
+            $('#activo').text('(activos)');
+        }
+        restaurarPacientes();
+        $('#creado').text('');
+        $('#editado').text('');
     });
 
     $('#formPaciente').submit(function(e){
@@ -108,22 +162,63 @@ $(document).ready(function() {
         nombre = $.trim($('#nombre').val());
         apellido = $.trim($('#apellido').val());
         dni = $.trim($('#dni').val());
+        telefono = $.trim($('#telefono').val());
+        dir = $.trim($('#dir').val());
+        localidad = $.trim($('#localidad').val());
+        provincia = $.trim($('#provincia').val());
+        obra = $.trim($('#obra').val());
+        obraNro = $.trim($('#obraNro').val());
+        medico = $.trim($('#medico').val());
+        padecimiento = $.trim($('#padecimiento').val());
+        grupo = $.trim($('#grupo').val());
+        ID_Enfermero = $.trim($('#ID_Enfermero').val());
+        ID_Ubicacion = $.trim($('#ID_Ubicacion').val());
+        opcion = 1;
+        console.log(nombre);
         $.ajax({
             url: "../bd/crud Pacientes.php",
             type: "POST",
             datatype: "json",
-            data:  {ID:ID, nombre:nombre, apellido:apellido, dni:dni, opcion:opcion},
+            data:  {nombre:nombre, apellido:apellido, dni:dni, telefono:telefono, dir:dir, localidad:localidad, provincia:provincia, obra:obra, obraNro:obraNro, medico:medico, padecimiento:padecimiento, grupo:grupo, ID_Enfermero:ID_Enfermero, ID_Ubicacion:ID_Ubicacion, opcion:opcion},
             success: function() {
-                tablaPacienteActivo.ajax.reload(null, false);
-                tablaPacienteInactivo.ajax.reload(null, false);
+                restaurarPacientes();
+                $('#modalCRUD').modal('hide');
             }
         });
-        $('#modalCRUD').modal('hide');
+    });
+
+    $('#formPacienteEdit').submit(function(e){
+        e.preventDefault();
+        nombre = $.trim($('#nombreEdit').val());
+        apellido = $.trim($('#apellidoEdit').val());
+        dni = $.trim($('#dniEdit').val());
+        telefono = $.trim($('#telefonoEdit').val());
+        dir = $.trim($('#dirEdit').val());
+        localidad = $.trim($('#localidadEdit').val());
+        provincia = $.trim($('#provinciaEdit').val());
+        obra = $.trim($('#obraEdit').val());
+        obraNro = $.trim($('#obraNroEdit').val());
+        medico = $.trim($('#medicoEdit').val());
+        padecimiento = $.trim($('#padecimientoEdit').val());
+        grupo = $.trim($('#grupoEdit').val());
+        ID_Enfermero = $.trim($('#ID_EnfermeroEdit').val());
+        ID_Ubicacion = $.trim($('#ID_UbicacionEdit').val());
+        opcion = 2;
+        $.ajax({
+            url: "../bd/crud Pacientes.php",
+            type: "POST",
+            datatype: "json",
+            data:  {ID:ID, nombre:nombre, apellido:apellido, dni:dni, telefono:telefono, dir:dir, localidad:localidad, provincia:provincia, obra:obra, obraNro:obraNro, medico:medico, padecimiento:padecimiento, grupo:grupo, ID_Enfermero:ID_Enfermero, ID_Ubicacion:ID_Ubicacion, opcion:opcion},
+            success: function() {
+                restaurarPacientes();
+                $('#formPacienteEdit')[0].reset();
+                $("#formPacienteEdit").hide();
+            }
+        });
     });
     
     $("#btnNuevo").click(function(){
         $('#formPaciente')[0].reset();
-        opcion = 1;
         ID = null;
         $("#formPaciente").trigger("reset");
         $(".modal-header").css( "background-color", "var(--first-color)");
@@ -133,48 +228,8 @@ $(document).ready(function() {
         $('.modal-backdrop').css('width', '100%');
     });
 
-    $(document).on("click", ".btnEditar", function(){
-        $('#formPaciente')[0].reset();
-        opcion = 2;
-        fila = $(this).closest("tr");
-        ID = parseInt(fila.find('td:eq(0)').text());
-        nombre = fila.find('td:eq(1)').text();
-        apellido = fila.find('td:eq(2)').text();
-        dni = fila.find('td:eq(3)').text();
-        $.ajax({
-            async: false,
-            url: "../bd/crud principal.php",
-            type: "POST",
-            datatype:"json",
-            data:  {opcion:opcion, ID:ID},
-            success: function(data) {
-                data = JSON.parse(data);
-                data = data[0];
-                $selectAula.val(data['ID_Aula']).trigger("change");
-                $selectMateria.val(data['ID_Materia']).trigger("change");
-                $('#grupo').val(data['Grupo']);
-                $selectDia.val(data['Dia']).trigger("change");
-                $selectHorario.val(data['ID_Horario']).trigger("change");
-                IDHorarioAnt = data['ID_Horario']
-                $selectDocente.val(data['ID_Docente']).trigger("change");
-                $selectSitRev.val(data['Situacion_Revista']).trigger("change");
-                $('#desde').val(data['Desde']);
-                $('#hasta').val(data['Hasta']);
-            }
-        });
-        $("#nombre").val(nombre);
-        $("#apellido").val(apellido);
-        $("#dni").val(dni);
-        $(".modal-header").css("background-color", "var(--first-color)");
-        $(".modal-header").css("color", "white" );
-        $(".modal-title").text("Editar Paciente");
-        $('#modalCRUD').modal('show');
-        $('.modal-backdrop').css('width', '100%');
-    });
-
     $(document).on("click", ".btnBorrar", function(){
-        fila = $(this);
-        ID = parseInt($(this).closest('tr').find('td:eq(0)').text());
+        ID = $('.btnBorrar').attr('data-id');
         opcion = 3;
         var respuesta = confirm("¿Está seguro de que desesa borrar el registro " + ID + "?");
         if (respuesta) {
@@ -184,16 +239,16 @@ $(document).ready(function() {
                 datatype: "json",
                 data:  {opcion:opcion, ID:ID},
                 success: function() {
-                    tablaPacienteActivo.ajax.reload(null, false);
-                    tablaPacienteInactivo.ajax.reload(null, false);
+                    restaurarPacientes();
+                    $('#formPacienteEdit')[0].reset();
+                    $("#formPacienteEdit").hide();
                 }
             });
         }
     });
 
     $(document).on("click", ".btnRestaurar", function(){
-        fila = $(this);
-        ID = parseInt($(this).closest('tr').find('td:eq(0)').text());
+        ID = $('.btnBorrar').attr('data-id');
         opcion = 4;
         var respuesta = confirm("¿Está seguro de que desea restaurar el registro " + ID + "?");
         if (respuesta) {
@@ -203,10 +258,32 @@ $(document).ready(function() {
                 datatype: "json",
                 data:  {opcion:opcion, ID:ID},
                 success: function() {
-                    tablaPacienteActivo.ajax.reload(null, false);
-                    tablaPacienteInactivo.ajax.reload(null, false);
+                    restaurarPacientes();
                 }
             });
         }
     });
+
+    function restaurarPacientes() {
+        $selectPaciente.children().remove();
+        $('#ID_Paciente').append('<option value=""></option>');
+        $('#formPacienteEdit')[0].reset();
+
+        table = 'pacientes';
+        indexColumn = 'ID_Paciente';
+        columns = ['ID_Paciente', 'Nombre', 'Apellido', 'DNI'];
+        
+        $.ajax({
+            url: "../bd/obtenerDatosSelect.php",
+            type: "POST",
+            datatype: "json",
+            data: {table:table, indexColumn:indexColumn, columns:columns, where:where},
+            success: function(data) {
+                data = JSON.parse(data);
+                data.forEach(element => {
+                    $('#ID_Paciente').append('<option ' + ' value="' + element['ID_Paciente'] + '">' + element['ID_Paciente'] + ' - ' + element['Nombre'] + ' ' + element['Apellido'] + ', DNI ' + element['DNI'] + '</option>');
+                });
+            }
+        });
+    }
 });

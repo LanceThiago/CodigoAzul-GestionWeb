@@ -57,6 +57,10 @@
                         <i class='bx bx-door-open nav_icon'></i>
                         <span class="nav_name">Ubicaciones</span>
                     </a>
+                    <a id="displays" href="../crud displays/" class="nav_link">
+                        <i class='bx bx-cast nav_icon'></i>
+                        <span class="nav_name">Displays</span>
+                    </a>
                     <?php if (isset($roleBool)): ?>
                     <a id="usuarios" href="../crud usuarios/" class="nav_link">
                         <i class='bx bx-group nav_icon'></i>

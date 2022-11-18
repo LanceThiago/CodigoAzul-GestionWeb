@@ -14,19 +14,19 @@
 
     switch($opcion){
         case 1: //Insertar
-            $columns = array('Usuario', 'NombreCompleto', 'Password', 'rol');
+            $columns = array('Usuario', 'NombreCompleto', 'Password', 'rol', 'Editado');
             $password = password_hash($password, PASSWORD_DEFAULT);
-            $values = array($user, $NombreCompleto, $password, $rol);
+            $values = array($user, $NombreCompleto, $password, $rol, date('Y-m-d H:i:s'));
             $data = $DBQuerys->crearRegistro('usuarios', $columns, $values);
             break;
         case 2: //Editar
             if ($password != '') {
-                $columns = array('Usuario', 'NombreCompleto', 'Password', 'rol');
+                $columns = array('Usuario', 'NombreCompleto', 'Password', 'rol', 'Editado');
                 $password = password_hash($password, PASSWORD_DEFAULT);
-                $values = array($user, $NombreCompleto, $password, $rol);
+                $values = array($user, $NombreCompleto, $password, $rol, date('Y-m-d H:i:s'));
             } else {
-                $columns = array('Usuario', 'NombreCompleto', 'rol');
-                $values = array($user, $NombreCompleto, $rol);
+                $columns = array('Usuario', 'NombreCompleto', 'rol', 'Editado');
+                $values = array($user, $NombreCompleto, $rol, date('Y-m-d H:i:s'));
             }
             $data = $DBQuerys->editarRegistro('usuarios', $columns, $values, 'ID_Usuario', $ID);
             break;
