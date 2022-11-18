@@ -57,7 +57,7 @@
 <?php
 include ('../../DB/DBConnection.php');
     $dbHandler = DbHandler();
-    $LEER=$dbHandler->prepare("SELECT enfermeros.ID_Enfermero, alarmas.Origen, pacientes.ID_Paciente FROM enfermeros ,alarmas, pacientes;");
+    $LEER=$dbHandler->prepare("SELECT enfermeros.ID_Enfermero, enfermeros.Estado,  alarmas.Origen, pacientes.ID_Paciente, pacientes.Estado FROM enfermeros ,alarmas, pacientes WHERE enfermeros.Estado=1 AND pacientes.Estado=1;");
     $LEER->execute();
     $ce = -1;
 	$cp = -1;
