@@ -15,6 +15,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../styles.css">
+    <link rel="icon" href="../../logoicono.png">
     <link rel="stylesheet" type="text/css" href="../../datatables/Responsive-2.3.0/css/responsive.bootstrap5.min.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <link rel="stylesheet" href="../../select2/css/select2.min.css">
