@@ -16,9 +16,15 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Create Database
+--
+DROP DATABASE IF EXISTS `codigo_azul`;
+CREATE DATABASE `codigo_azul`;
+USE `codigo_azul`;
+
+--
 -- Table structure for table `alarmas`
 --
-
 DROP TABLE IF EXISTS `alarmas`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
