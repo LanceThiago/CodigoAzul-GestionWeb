@@ -48,7 +48,7 @@
         }
 
         public function promedioRespuesta($table, $columnInicio, $columnFinal, $as) {
-            $query = $this->_db->prepare("SELECT SEC_TO_TIME(TIMESTAMPDIFF(SECOND, $columnInicio, $columnFinal)) AS $as FROM $table;");
+            $query = $this->_db->prepare("SELECT SEC_TO_TIME(TIMESTAMPDIFF(SECOND, $columnInicio, $columnFinal)) AS $as FROM $table WHERE Atendido = 1;");
             $query->execute(array());
             $response = $query->fetchAll();
             $unix = array();
@@ -60,7 +60,7 @@
         }
 
         public function min($table, $columnInicio, $columnFinal, $as) {
-            $query = $this->_db->prepare("SELECT MIN(SEC_TO_TIME(TIMESTAMPDIFF(SECOND, $columnInicio, $columnFinal))) AS $as FROM $table;");
+            $query = $this->_db->prepare("SELECT MIN(SEC_TO_TIME(TIMESTAMPDIFF(SECOND, $columnInicio, $columnFinal))) AS $as FROM $table WHERE Atendido = 1;");
             $query->execute(array());
             $response = $query->fetchAll();
             $unix = array();
@@ -72,7 +72,7 @@
         }
 
         public function max($table, $columnInicio, $columnFinal, $as) {
-            $query = $this->_db->prepare("SELECT MAX(SEC_TO_TIME(TIMESTAMPDIFF(SECOND, $columnInicio, $columnFinal))) AS $as FROM $table;");
+            $query = $this->_db->prepare("SELECT MAX(SEC_TO_TIME(TIMESTAMPDIFF(SECOND, $columnInicio, $columnFinal))) AS $as FROM $table WHERE Atendido = 1;");
             $query->execute(array());
             $response = $query->fetchAll();
             $unix = array();

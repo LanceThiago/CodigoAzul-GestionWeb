@@ -69,10 +69,6 @@
                     <?php endif; ?>
                 </div>
             </div>
-            <a href="#" class="nav_link">
-                <i class='bx bx-info-circle nav_icon'></i>
-                <span class="nav-blind">Info</span>
-            </a>
         </nav>
     </div>
     <main>
