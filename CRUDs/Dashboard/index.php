@@ -33,6 +33,8 @@
             <h4>Cantidad de alarmas inactivos: <span id="cantAlarmasInactivos"></span></h4>
             <h4>Cantidad de registros: <span id="cantRegistros"></span></h4>
             <h4>Promedio tiempo de respuesta: <span id="promedioRespuesta"></span></h4>
+            <h4>Minimo tiempo de respuesta: <span id="minRespuesta"></span></h4>
+            <h4>Maximo tiempo de respuesta: <span id="maxRespuesta"></span></h4>
             <div class="col-6">
                 <h1>Cantidad de alertas por mes</h1>
                 <canvas id="AlertasPMes"></canvas>
@@ -57,29 +59,24 @@
 <?php
 include ('../../DB/DBConnection.php');
     $dbHandler = DbHandler();
-    $LEER=$dbHandler->prepare("SELECT enfermeros.ID_Enfermero, enfermeros.Estado,  alarmas.Origen, pacientes.ID_Paciente, pacientes.Estado FROM enfermeros ,alarmas, pacientes WHERE enfermeros.Estado=1 AND pacientes.Estado=1;");
+    $LEER=$dbHandler->prepare("SELECT alarmas.Origen, alarmas.Creado FROM alarmas;");
     $LEER->execute();
-    $ce = -1;
-	$cp = -1;
-    $b = 0;
-    $c = 0;
+    $ca=0;
+    $b=0;
+    $c=0;
     foreach ($LEER as $dato) {
-        if (isset($dato['ID_Enfermero'])) {
-						$ce++;
-					}
-        if (isset($dato['ID_Paciente'])) {
-            $cp++;
-        }
-        if ($dato['Origen'] == 'Baño' || $dato['Origen'] == 'baño') {
+        $ca++;
+        if ($dato['Origen']=='Baño' || $dato['Origen']=='baño') {
             $b++;
         }
-        elseif ($dato['Origen'] == 'Cama' || $dato['Origen'] == 'cama') {
+        elseif ($dato['Origen']=='Cama' || $dato['Origen']=='cama') {
             $c++;
         }
     }
     $b = array($b,$c);
-    $c = array($ce, $cp);
-    $a = array(7,10);
+
+    $a = array($ca);
+    $c = array(7,10);
 ?>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

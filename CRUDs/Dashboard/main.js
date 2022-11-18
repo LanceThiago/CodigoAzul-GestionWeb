@@ -67,9 +67,37 @@ $(document).ready(function() {
         url: "../bd/dashboard.php",
         type: "POST",
         datatype: "json",
-        data: {opcion:2, table:table, columnInicio:columnInicio, columnFinal:columnFinal, as:$as},
+        data: {opcion:opcion, table:table, columnInicio:columnInicio, columnFinal:columnFinal, as:$as},
         success: function(data) {
             $('#promedioRespuesta').text(data);
+        }
+    });
+    opcion = 3;
+    columnInicio = 'FechaHora';
+    columnFinal = 'FechaHoraAtendido';
+    $as = 'Diferencia';
+    $.ajax({
+        async: false,
+        url: "../bd/dashboard.php",
+        type: "POST",
+        datatype: "json",
+        data: {opcion:opcion, table:table, columnInicio:columnInicio, columnFinal:columnFinal, as:$as},
+        success: function(data) {
+            $('#minRespuesta').text(data);
+        }
+    });
+    opcion = 4;
+    columnInicio = 'FechaHora';
+    columnFinal = 'FechaHoraAtendido';
+    $as = 'Diferencia';
+    $.ajax({
+        async: false,
+        url: "../bd/dashboard.php",
+        type: "POST",
+        datatype: "json",
+        data: {opcion:opcion, table:table, columnInicio:columnInicio, columnFinal:columnFinal, as:$as},
+        success: function(data) {
+            $('#maxRespuesta').text(data);
         }
     });
 

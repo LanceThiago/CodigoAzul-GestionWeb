@@ -23,6 +23,12 @@
             case 2: //Promedio respuesta
                 $data = $DBQuerys->promedioRespuesta($table, $columnInicio, $columnFinal, $as);
                 break;
+            case 3: //Minimo tiemo de respuesta
+                $data = $DBQuerys->min($table, $columnInicio, $columnFinal, $as);
+            break;
+            case 4: //maximo tiempo de respuesta
+                $data = $DBQuerys->max($table, $columnInicio, $columnFinal, $as);
+                break;
         }
     } else {
         $data = false;
