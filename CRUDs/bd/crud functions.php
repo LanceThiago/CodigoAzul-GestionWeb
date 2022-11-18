@@ -29,7 +29,7 @@
         }
 
         public function select($table, $indexColumn, $columns, $where) {
-            $query = $this->_db->prepare("SELECT `".str_replace(" , ", " ", implode("`, `", $columns))."` FROM $table" . ($where != '' ? " WHERE $where" : "") . ";");
+            $query = $this->_db->prepare("SELECT `".str_replace(" , ", " ", implode("`, `", $columns))."` FROM $table WHERE Estado = 1" . ($where != '' ? " AND $where" : "") . ";");
             $query->execute(array());
             $response = $query->fetchAll();
             return $response;
