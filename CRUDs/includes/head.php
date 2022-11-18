@@ -33,7 +33,6 @@
         <nav class="nav">
             <div>
                 <a href="../" class="nav_logo">
-                    <i class='bx bx-plus-medical nav_logo-icon'></i>
                     <span class="nav_logo-name">Codigo Azul</span>
                 </a>
                 <div class="nav_list">
